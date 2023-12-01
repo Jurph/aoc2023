@@ -34,7 +34,7 @@ def codesum(problem):
     codesum = 0
     for scribble in problem.strings:
         tens = digitin(scribble)
-        ones = digitin(scribble.reverse())
+        ones = digitin(reversed(scribble))
         result = 10 * tens + ones
         codesum += result 
     return codesum
