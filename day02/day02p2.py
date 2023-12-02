@@ -37,11 +37,13 @@ class Game():
         self.grn = grn
         self.blu = blu
         self.isPossible = self.couldhappen()
+        # A game's "power", per the problem statement for Part 2, is the 
+        # product of the highest number of red, green, and blue cubes seen
         self.power = int(red * grn * blu)
         return 
 
     def couldhappen(self):
-        # A game is "possible", per the problem statement, if we've
+        # A game is "possible", per the problem statement for Part 1, if we've
         # never seen more than 12 red, 13 green, or 14 blue cubes 
         if (self.red <= 12) and (self.grn <= 13) and (self.blu <= 14):
             return True
@@ -55,14 +57,13 @@ class Problem():
             games.append(Game(line))
         self.games = games
 
-
 def main():
     # Ingest and format the data
     t = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day02\\test.txt")
     p = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day02\\input.txt")
 
     subtotal = 0
-    for game in t.games:
+    for game in p.games:
         subtotal += game.power
     print("Total power: {}".format(subtotal))
 
