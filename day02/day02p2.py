@@ -37,7 +37,7 @@ class Game():
         self.grn = grn
         self.blu = blu
         self.isPossible = self.couldhappen()
-        self.power = red * grn * blu
+        self.power = int(red * grn * blu)
         return 
 
     def couldhappen(self):
@@ -62,10 +62,9 @@ def main():
     p = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day02\\input.txt")
 
     subtotal = 0
-    for game in p.games:
-        if game.isPossible:
-            subtotal += game.index
-    print("Total of possible game indices: {}".format(subtotal))
+    for game in t.games:
+        subtotal += game.power
+    print("Total power: {}".format(subtotal))
 
 if __name__ == "__main__":
     main()
