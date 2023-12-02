@@ -5,8 +5,7 @@
 from dataclasses import dataclass
 
 # Problem() is my class that ingests the day's input and structures it for easy computation
-
-class Problem():
+class Problem(object):
     def __init__(self, filename):
         strings = [] 
         lines = open(filename).read().splitlines()
@@ -15,35 +14,28 @@ class Problem():
         self.strings = strings
         return
 
-def digitin(string):
+# Finds the first digit in a string 
+def firstDigitIn(string):
     for element in string:
         if element.isdigit():
-            # print("Found a digit: {}".format(element))
             return int(element)
 
 def distill(string):
-    newstring = string.replace('one','o1e')
-    newstring = newstring.replace('two','t2o')
-    newstring = newstring.replace('three','t3e')
-    newstring = newstring.replace('four','4')
-    newstring = newstring.replace('five','5ve')
-    newstring = newstring.replace('six','s6x')
-    newstring = newstring.replace('seven','s7en')
-    newstring = newstring.replace('eight','ei8t')
-    newstring = newstring.replace('nine','ni9e')
-    return newstring
+    # This weird dictionary ensures that overlapping pseudodigits are still
+    # recoverable, e.g. `oneight` becomes `o1ei8ht` 
+    digits = {'one':'o1e', 'two':'t2o', 'three':'t3e', 'four':'4', 'five':'f5ve','six':'s6x', 'seven':'se7en', 'eight':'ei8ht','nine':'ni9e'}
+    for key in digits:
+        while key in string:
+            string = string.replace(key, digits[key])
+    return string
 
 # Find the sum of 10x the first digit in the string, and 1x the last digit in the string
-# including pseudodigits 
+# including pseudodigits, which we distill down to digits with distill() 
 def codesum(problem):
     codesum = 0
     for scribble in problem.strings:
         scribble = distill(scribble)
-        tens = digitin(scribble)
-        ones = digitin(reversed(scribble))
-        result = 10 * tens + ones
-        # print("Got a result of {}".format(result))
-        codesum += result 
+        codesum += 10 * firstDigitIn(scribble) + firstDigitIn(reversed(scribble))
     return codesum
 
 def main():
@@ -52,12 +44,8 @@ def main():
     p = Problem("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day01\\input.txt")
 
     # Set up state variables and run
-    test = codesum(t)
-    print("Sum of {} on test case.".format(test))
-    if test == 281:
-        print("...tests passed!")
-        prod = codesum(p)
-        print("Sum of {} on real data.".format(prod))
+    print("Sum of {} on test case.".format(codesum(t))) # Should output 281
+    print("Sum of {} on real data.".format(codesum(p)))
     return
 
 if __name__ == "__main__":
