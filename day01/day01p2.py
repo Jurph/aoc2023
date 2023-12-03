@@ -21,8 +21,8 @@ def firstDigitIn(string):
             return int(element)
 
 def distill(string):
-    # This weird dictionary ensures that overlapping pseudodigits are still
-    # recoverable, e.g. `oneight` becomes `o1ei8ht` 
+    # This weird dict "digits" ensures that overlapping pseudodigits are still
+    # recoverable, e.g. `oneight` becomes `o1ei8ht` leaving both digits intact 
     digits = {'one':'o1e', 'two':'t2o', 'three':'t3e', 'four':'4', 'five':'f5ve','six':'s6x', 'seven':'se7en', 'eight':'ei8ht','nine':'ni9e'}
     for key in digits:
         while key in string:

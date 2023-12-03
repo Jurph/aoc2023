@@ -1,12 +1,10 @@
 # Advent of Code 2023
 # Day 1, Part 1
-# Parsing a list of strings for digits, then summing them 
+# Finding two specific digits in a string 
 
 from dataclasses import dataclass
-DIGITS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 # Problem() is my class that ingests the day's input and structures it for easy computation
-
 class Problem():
     def __init__(self, filename):
         strings = [] # We don't need strings in this chapter but it's a neat feature
@@ -22,34 +20,17 @@ class Problem():
         self.integers = integers
         return
 
-def digitin(string):
+def firstDigitIn(string) -> int:
     for element in string:
         if element.isdigit():
-            print("Found a digit: {}".format(element))
             return int(element)
 
-def distill(string):
-    newstring = string.replace('one','1')
-    newstring = newstring.replace('two','2')
-    newstring = newstring.replace('three','3')
-    newstring = newstring.replace('four','4')
-    newstring = newstring.replace('five','5')
-    newstring = newstring.replace('six','6')
-    newstring = newstring.replace('seven','7')
-    newstring = newstring.replace('eight','8')
-    newstring = newstring.replace('nine','9')
-    return newstring
-
-# Find the total calories carried by all the elves 
-def codesum(problem):
-    codesum = 0
+# Find the sum of 10x the first digit and 1x the last digit 
+def codesum(problem) -> int:
+    subtotal = 0
     for scribble in problem.strings:
-        tens = digitin(scribble)
-        ones = digitin(reversed(scribble))
-        result = 10 * tens + ones
-        print("Got a result of {}".format(result))
-        codesum += result 
-    return codesum
+        subtotal += 10 * firstDigitIn(scribble) + firstDigitIn(reversed(scribble))
+    return subtotal
 
 def main():
     # Ingest and format the data
