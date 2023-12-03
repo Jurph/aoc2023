@@ -16,22 +16,15 @@ class GridSquare(object):
 
     def findNeighbors(self):
         neighbors = []
-        row, col = self.x, self.y
-        if row == 0:
-            neighbors.append([row + 1, col])
-        elif row == self.height-1:
-            neighbors.append([row - 1, col])
-        else:
-            neighbors.append([row + 1, col])
-            neighbors.append([row - 1, col])
-
-        if col == 0:
-            neighbors.append([row, col + 1])
-        elif col == self.width - 1:
-            neighbors.append([row, col - 1])
-        else:
-            neighbors.append([row, col + 1])
-            neighbors.append([row, col - 1])
+        col, row = self.x, self.y
+        neighbors.append([row + 1, col - 1])
+        neighbors.append([row - 1, col - 1])
+        neighbors.append([row + 1, col + 1])
+        neighbors.append([row - 1, col + 1])
+        neighbors.append([row, col + 1])
+        neighbors.append([row, col - 1])
+        neighbors.append([row + 1, col])
+        neighbors.append([row - 1, col])
         return neighbors
 
 @dataclass(frozen=True)
@@ -53,7 +46,7 @@ class PartNumber:
     def neighbors(self) -> list:
         n = []
         for s in self.squares:
-            n.append(s.findNeighbors())
+            n += s.findNeighbors()
         return n
 
 
@@ -80,12 +73,12 @@ class Schematic(object):
             for square in row:
                 if square.value in '0123456789':
                     part.append(square)
-                    print("Found a digit: {} - appending to part".format(square.value)) 
+                    # print("Found a digit: {} - appending to part".format(square.value)) 
                 elif len(part) == 0:
                     pass
                 else:
                     parts.append(PartNumber(part))
-                    print("Closed out a part: {}".format(parts[-1].value()))
+                    # print("Closed out a part: {}".format(parts[-1].value()))
                     part = []
         return parts
 
@@ -106,34 +99,43 @@ def MakeSchematic(filename: str) -> Schematic:
         squares.append(subgrid)
     return Schematic(grid=squares, width=width+1, height=height+1) # n.b. we are zero indexed
 
-# def MakePartNumbers(s: Schematic) -> list:
-#     parts = []
-#     for row in s.grid:
-#         print("New row:\n")
-#         for square in row:
-#             squares = []
-#            if square.value in '0123456789':
-#                squares.append(square)
-#                print("Found a digit; adding {} to this part\n".format(square.value))
-#            else:
-#                print("Found a non-digit")
-#                parts.append(PartNumber(squares))
-#                squares = []
-#    return parts
+def validateNeighbors(neighbors: list, schematic: Schematic) -> list:
+    # print("Staring with {} neighbors...".format(len(neighbors)))
+    validneighbors = []
+    for n in neighbors:
+        x = int(n[0])
+        y = int(n[1])
+        # print("WxH: {} x {} | coord: ({}, {})".format(schematic.width, schematic.height,x,y))
+        if (x < 0) or (x >= (schematic.width)) or (y < 0) or (y >= (schematic.height)):
+            # print("coordinates {},{} are invalid neighbors".format(x,y))
+            pass
+        else:
+            validneighbors.append(n)
+    # print("Ending with {} neighbors...".format(len(validneighbors)))
+    return validneighbors
+
+def countParts(s: Schematic) -> int:
+    partsum = 0
+    for part in s.parts():
+        for coordinates in validateNeighbors(part.neighbors(),s):
+            x = coordinates[0]
+            y = coordinates[1]
+            if s.grid[x][y].value == 'X':
+                partsum += part.value()
+                break
+    return partsum
 
 
 def main():
     # Ingest and format the input data
     t = MakeSchematic("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day03\\test.txt")
-    p = MakeSchematic("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day03\\input.txt")
+    i = MakeSchematic("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day03\\input.txt")
 
-    print("TEST GRID:")
-    t.print()
-    print("\n")
-    parts = t.parts()
-    print("We've got {} parts:".format(len(parts)))
-    for part in parts:
-        print("Found a part: {}".format(part.value()))
+    # print("TEST GRID:")
+    # t.print()
+
+    print("Part totals: {}".format(countParts(t)))
+    print("Part totals: {}".format(countParts(i)))
 
     # print("REAL GRID:")
     # p.print()
