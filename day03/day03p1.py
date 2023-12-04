@@ -121,6 +121,7 @@ def countParts(s: Schematic) -> int:
             x = coordinates[0]
             y = coordinates[1]
             if s.grid[x][y].value == 'X':
+                print("Added valid part number {} at ({},{})".format(part.value(), part.x(), part.y()))
                 partsum += part.value()
                 break
     return partsum
@@ -131,15 +132,15 @@ def main():
     t = MakeSchematic("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day03\\test.txt")
     i = MakeSchematic("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day03\\input.txt")
 
-    # print("TEST GRID:")
-    # t.print()
-
+    print("TEST GRID:")
+    t.print()
     print("Part totals: {}".format(countParts(t)))
+
+    print("REAL GRID:")
+    i.print()
     print("Part totals: {}".format(countParts(i)))
 
-    # print("REAL GRID:")
-    # p.print()
-
+ 
     # Run the solvers against each problem 
     # print("TEST CASE: valid games = {}".format(doTheThing(t)))
     # print("PROD CASE: valid games = {}".format(doTheThing(p)))
