@@ -53,10 +53,7 @@ def getScoringTickets(problem) -> int:
         for i in range(1, score+1):
             cards[j+i] += cards[j]
             # print("Each of {} copies of card number {} generates a copy of card {}".format(cards[j], j, j+i))
-    ticketsum = 0
-    for c in cards:
-        ticketsum += int(c)
-    return ticketsum
+    return sum(cards)
 
     
 def main():
