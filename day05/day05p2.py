@@ -22,13 +22,10 @@ class Map(object):
         return seed
 
     def findDestinations(self, seed: int, span: int) -> list:
-        destinations = []
         seed = int(seed)
         span = int(span)
-        for s in range(seed, seed + span):
-            destinations.append(self.findDestination(seed))
-        return destinations
-
+        return (self.findDestination(x) for x in range(seed, seed + span))
+            
 def MakeMap(rows: list) -> Map:
     rows = rows
     source = [None] * (len(rows))
@@ -62,7 +59,7 @@ def MakeAlmanac(filename: str) -> Almanac:
     for r in rows[1:]:
         maps.append(MakeMap(r))
     for i, element in enumerate(planting[1:]):
-        if i % 2 == 0:
+        if i % 2 != 0:
             spans.append(int(element))
         else:
             seeds.append(int(element))
@@ -72,12 +69,9 @@ def MakeAlmanac(filename: str) -> Almanac:
 def getPlantingInstructions(a : Almanac) -> list:
     seedlist = []
     for i, s in enumerate(a.seeds):
-        planting = range(s, s + a.spans[i])
-        for p in planting:
-            tmp = [int(p)]
-            for map in a.maps:
-                tmp.append(map.findDestination(tmp[-1]))
-            seedlist.append(tmp)
+        print("Considering {} seeds, hold on...".format(a.spans[i]))
+        for m in a.maps:
+            seedlist.append(list(m.findDestinations(seed=a.seeds[i], span=a.spans[i])))
     return seedlist
 
 # Finds the seed whose final destination on the map is lowest 
@@ -85,6 +79,7 @@ def findNearestPlot(i : list) -> int:
     distances = []
     for seedlist in i:
         distances.append(int(seedlist[-1]))
+        print(int(seedlist[-1]))
     return sorted(distances)[0]
 
 def main():
