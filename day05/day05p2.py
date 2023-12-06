@@ -1,5 +1,5 @@
 # Advent of Code 2023
-# Day 5, Part 1
+# Day 5, Part 2
 # Mapping seeds to fertilizer zones 
 
 from dataclasses import dataclass
@@ -41,6 +41,11 @@ class Almanac(object):
     spans: list[int]
     maps: list[Map]
 
+    def findDestination(self, seed: int) -> int:
+        for m in self.maps:
+            seed = m.findDestination(seed)
+        return int(seed)
+
 def MakeAlmanac(filename: str) -> Almanac:
     lines = open(filename).read().splitlines()
     lines.append("")
@@ -70,25 +75,19 @@ def getPlantingInstructions(a : Almanac) -> list:
     seedlist = []
     for i, s in enumerate(a.seeds):
         print("Considering {} seeds, hold on...".format(a.spans[i]))
-        for m in a.maps:
-            seedlist.append(list(m.findDestinations(seed=a.seeds[i], span=a.spans[i])))
-    return seedlist
-
-# Finds the seed whose final destination on the map is lowest 
-def findNearestPlot(i : list) -> int:
-    distances = []
-    for seedlist in i:
-        distances.append(int(seedlist[-1]))
-        print(int(seedlist[-1]))
-    return sorted(distances)[0]
+        print("Starting seed: {}".format(s))
+        print("  Ending seed: {}".format(s + a.spans[i]))
+        seedlist.append(list((a.findDestination(x) for x in range(s, s + a.spans[i]))))
+        return seedlist
+        # TODO: wtf is going on with this output? 
 
 def main():
     # Ingest and format the data
     t = MakeAlmanac("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day05\\test.txt")
     p = MakeAlmanac("C:\\Users\\Jurph\\Documents\\Python Scripts\\aoc2023\\day05\\input.txt")
 
-    print(findNearestPlot(getPlantingInstructions(t)))
-    print(findNearestPlot(getPlantingInstructions(p)))
+    print(getPlantingInstructions(t)[0])
+    print(getPlantingInstructions(p)[0])
  
 if __name__ == "__main__":
     main()
